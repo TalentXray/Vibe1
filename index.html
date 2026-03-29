@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Testing Out Vibe Coding</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --bg2: #111118;
+      --bg3: #16161f;
+      --accent: #7c6af7;
+      --accent2: #a594ff;
+      --text: #e8e6f0;
+      --muted: #7a7890;
+      --border: rgba(255,255,255,0.07);
+      --card-bg: rgba(255,255,255,0.03);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.75;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 1.25rem 2.5rem;
+      display: flex; justify-content: space-between; align-items: center;
+      background: rgba(10,10,15,0.7);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.1rem;
+      color: var(--accent2);
+      letter-spacing: 0.02em;
+    }
+    .nav-badge {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 0.3rem 0.75rem;
+      border-radius: 20px;
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 8rem 2.5rem 5rem;
+      max-width: 900px; margin: 0 auto;
+      position: relative;
+    }
+    .hero-eyebrow {
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.75rem;
+      opacity: 0; animation: fadeUp 0.7s ease 0.2s forwards;
+    }
+    .hero h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 2rem;
+      opacity: 0; animation: fadeUp 0.7s ease 0.4s forwards;
+    }
+    .hero h1 em {
+      font-style: italic;
+      background: linear-gradient(135deg, var(--accent2), #c084fc);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .hero-body {
+      max-width: 640px;
+      font-size: 1.1rem;
+      color: rgba(232,230,240,0.75);
+      line-height: 1.85;
+      opacity: 0; animation: fadeUp 0.7s ease 0.6s forwards;
+    }
+    .scroll-hint {
+      position: absolute; bottom: 2.5rem; left: 2.5rem;
+      display: flex; align-items: center; gap: 0.75rem;
+      font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--muted);
+      opacity: 0; animation: fadeUp 0.7s ease 1s forwards;
+    }
+    .scroll-line {
+      width: 40px; height: 1px; background: var(--muted);
+      position: relative; overflow: hidden;
+    }
+    .scroll-line::after {
+      content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+      background: var(--accent2);
+      animation: slide 2s ease-in-out infinite 1.5s;
+    }
+
+    /* DIVIDER */
+    .section-divider {
+      width: 100%; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent) 30%, var(--accent2) 70%, transparent);
+      opacity: 0.3; margin: 0 auto;
+    }
+
+    /* SECTIONS */
+    section { padding: 6rem 2.5rem; max-width: 900px; margin: 0 auto; }
+
+    .section-label {
+      font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 1rem;
+    }
+    .section-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      line-height: 1.2; margin-bottom: 1.75rem;
+    }
+    .section-body {
+      font-size: 1.05rem; color: rgba(232,230,240,0.72);
+      line-height: 1.85; max-width: 680px;
+    }
+
+    /* USE CASES GRID */
+    .use-cases { padding: 6rem 2.5rem; max-width: 1100px; margin: 0 auto; }
+    .use-cases-header { max-width: 900px; margin: 0 auto 3.5rem; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      transition: border-color 0.3s, transform 0.3s, background 0.3s;
+      cursor: default;
+      position: relative; overflow: hidden;
+    }
+    .card::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(124,106,247,0.06), transparent 60%);
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .card:hover { border-color: rgba(124,106,247,0.4); transform: translateY(-3px); background: rgba(255,255,255,0.05); }
+    .card:hover::before { opacity: 1; }
+    .card-icon {
+      font-size: 1.5rem; margin-bottom: 1rem;
+      width: 44px; height: 44px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(124,106,247,0.1);
+      border-radius: 10px;
+      border: 1px solid rgba(124,106,247,0.2);
+    }
+    .card h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.15rem; margin-bottom: 0.65rem;
+      color: var(--text);
+    }
+    .card p { font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
+
+    /* HONEST SECTION */
+    .honest-block {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 3rem;
+      margin-top: 4rem;
+      position: relative; overflow: hidden;
+    }
+    .honest-block::after {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem;
+      text-align: center;
+      font-size: 0.8rem; color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slide {
+      0%   { left: -100%; } 50%  { left: 100%; } 100% { left: 100%; }
+    }
+
+    .reveal {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* NOISE overlay */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    }
+
+    * { position: relative; z-index: 1; }
+    nav, body::before { z-index: auto; }
+    nav { z-index: 100; }
+    body::before { z-index: 0; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <span class="nav-logo">Vibe Coded ✦</span>
+    <span class="nav-badge">Experiment No. 001</span>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <p class="hero-eyebrow">A recruiter experiments with AI</p>
+    <h1>Testing Out<br/><em>Vibe Coding</em></h1>
+    <p class="hero-body">
+      The recruitment industry has been buzzing with talk of AI, automation, and the future of hiring. 
+      For months I've been watching the hype build — tools that write job specs, screen candidates, 
+      predict attrition, and apparently do half my job for me. So I figured: rather than just read 
+      about it, why not actually try it? This page is the result of me sitting down with an AI, 
+      describing what I wanted, and letting it build. No code editor. No developer. Just conversation 
+      and curiosity. Welcome to my first experiment in vibe coding.
+    </p>
+    <div class="scroll-hint">
+      <span class="scroll-line"></span>
+      Scroll to explore
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- ABOUT VIBE CODING -->
+  <section>
+    <p class="section-label reveal">What is this?</p>
+    <h2 class="section-title reveal">The AI hype is loud.<br/>I decided to test it myself.</h2>
+    <p class="section-body reveal">
+      Every conference, every LinkedIn post, every industry newsletter — it's all AI, all the time. 
+      The recruitment sector is no exception. Platforms are racing to embed machine learning into 
+      ATS systems, sourcing tools, and candidate matching engines. The promise is compelling: faster 
+      hiring, reduced bias, better outcomes. But how much of it actually works? And more interestingly 
+      — could someone with zero technical background actually build something with these tools?
+    </p>
+    <br/>
+    <p class="section-body reveal">
+      Vibe coding is the idea that you describe what you want in plain language, and an AI writes the 
+      code for you. No syntax. No Stack Overflow. No developer needed. I thought it sounded too good 
+      to be true. So I tried it. This page — the design, the layout, every line of code — was generated 
+      through conversation with Claude. I'm a recruiter, not an engineer. And here we are.
+    </p>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- USE CASES -->
+  <div class="use-cases">
+    <div class="use-cases-header">
+      <p class="section-label reveal">The real opportunity</p>
+      <h2 class="section-title reveal">Use cases for vibe coding<br/>in modern recruiting</h2>
+      <p class="section-body reveal">
+        Beyond building websites, the same principle — describe what you need, let AI build it — 
+        opens up a surprising range of possibilities for recruitment teams who've never written a 
+        line of code.
+      </p>
+    </div>
+    <div class="grid">
+
+      <div class="card reveal">
+        <div class="card-icon">🎯</div>
+        <h3>Custom Candidate Scorecards</h3>
+        <p>Build bespoke scoring tools for specific roles — no spreadsheet expertise needed. Describe the competencies, weights, and red flags, and get a working interactive scorecard in minutes.</p>
+      </div>
+
+      <div class="card reveal">
+        <div class="card-icon">📋</div>
+        <h3>Job Description Generators</h3>
+        <p>Move beyond generic templates. Vibe code a tool that asks smart questions about the role and outputs a compelling, inclusive, on-brand JD tailored to biotech and life sciences.</p>
+      </div>
+
+      <div class="card reveal">
+        <div class="card-icon">📊</div>
+        <h3>Hiring Pipeline Dashboards</h3>
+        <p>Build a real-time visual dashboard for your hiring funnel without touching your ATS. Connect it to a spreadsheet and track stage conversion, time-to-offer, and drop-off rates.</p>
+      </div>
+
+      <div class="card reveal">
+        <div class="card-icon">💬</div>
+        <h3>Interview Question Banks</h3>
+        <p>Create a searchable, filterable library of competency-based interview questions organised by seniority, function, and therapeutic area — built entirely through conversation with AI.</p>
+      </div>
+
+      <div class="card reveal">
+        <div class="card-icon">🤝</div>
+        <h3>Candidate-Facing Microsites</h3>
+        <p>Build bespoke landing pages for senior or confidential searches — giving candidates a curated, branded experience without the overhead of a full design project.</p>
+      </div>
+
+      <div class="card reveal">
+        <div class="card-icon">⚗️</div>
+        <h3>Offer Comparison Calculators</h3>
+        <p>Help candidates weigh up competing offers with a custom tool that factors in salary, equity, benefits, location weighting, and career trajectory — built to your spec.</p>
+      </div>
+
+      <div class="card reveal">
+        <div class="card-icon">📧</div>
+        <h3>Outreach Sequence Builder</h3>
+        <p>Design and test multi-touch outreach campaigns with AI-assisted copy, personalisation logic, and timing recommendations — without needing a CRM developer.</p>
+      </div>
+
+      <div class="card reveal">
+        <div class="card-icon">🔬</div>
+        <h3>Market Mapping Tools</h3>
+        <p>Build lightweight competitor talent maps for specific functions or geographies. Describe the parameters, and get a structured, visual output you can share with clients.</p>
+      </div>
+
+      <div class="card reveal">
+        <div class="card-icon">📁</div>
+        <h3>Onboarding Resource Hubs</h3>
+        <p>Create beautiful, organised microsites for new joiners — consolidating culture docs, team intros, 30-60-90 day plans, and FAQs into one polished experience.</p>
+      </div>
+
+    </div>
+
+    <!-- Honest reflection block -->
+    <div class="honest-block reveal">
+      <p class="section-label">The honest bit</p>
+      <h3 class="section-title" style="font-size: 1.6rem; margin-bottom: 1rem;">This is my first attempt.<br/>It won't be my last.</h3>
+      <p class="section-body">
+        Building this page took an afternoon. Not because it was hard — because I kept tweaking things 
+        just because I could. The barrier between "I have an idea" and "that idea exists on the internet" 
+        has never been lower. For recruiters who want to build tools for clients, create better candidate 
+        experiences, or just understand what's actually possible with AI — vibe coding is worth exploring. 
+        I'm sharing this experiment publicly because the best way to learn is to do it in the open. 
+        Follow along as I keep building.
+      </p>
+    </div>
+  </div>
+
+  <footer>
+    <p>Built with curiosity &amp; Claude · No developers were harmed · Experiment No. 001</p>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 60);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    reveals.forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
